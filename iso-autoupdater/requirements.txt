@@ -1,0 +1,4 @@
+PyQt6
+qt-material
+requests
+beautifulsoup4

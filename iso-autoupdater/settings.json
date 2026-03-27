@@ -1,0 +1,11 @@
+{
+    "download_dir": "C:/Users/manus/Downloads",
+    "run_at_startup": true,
+    "download_betas": false,
+    "distros": {
+        "Ubuntu": true,
+        "Debian": false,
+        "Fedora": false,
+        "Arch": false
+    }
+}
