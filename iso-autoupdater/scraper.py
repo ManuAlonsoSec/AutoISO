@@ -105,7 +105,7 @@ def get_arch_latest(allow_betas=False):
         href = link.get('href')
         # Typical format: archlinux-2024.12.01-x86_64.iso
         if href and re.match(r'archlinux-\d{4}\.\d{2}\.\d{2}(?:-\w+)?-x86_64\.iso', href):
-            match = re.search(r'archlinux-(\d{4}\.\d{2}\.\d{2}(?:-\w+)?)-x86_64\.iso', href)
+            match = re.search(r'archlinux-(.+)-x86_64\.iso', href)
             if match:
                 version = match.group(1)
                 if not allow_betas and ('beta' in version.lower() or 'rc' in version.lower()):
@@ -150,8 +150,8 @@ def get_fedora_latest(allow_betas=False):
             iso_soup = _get_soup(iso_dir)
             for file_link in iso_soup.find_all('a'):
                 href = file_link.get('href')
-                if href and href.startswith('Fedora-Workstation-Live-x86_64-') and href.endswith('.iso'):
-                    match = re.search(r'Fedora-Workstation-Live-x86_64-(.+)\.iso', href)
+                if href and href.startswith('Fedora-Workstation') and href.endswith('.iso'):
+                    match = re.search(r'Fedora-Workstation-(.+).iso', href)
                     if match:
                         version_full = match.group(1)
                         if not allow_betas and ('beta' in version_full.lower() or 'rc' in version_full.lower()):

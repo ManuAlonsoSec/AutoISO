@@ -1,10 +1,12 @@
 import sys
 import argparse
+import ctypes
 from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, 
                              QHBoxLayout, QLabel, QCheckBox, QPushButton, 
                              QFileDialog, QProgressBar, QGridLayout, QMessageBox,
                              QScrollArea, QFrame)
 from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QIcon
 from qt_material import apply_stylesheet
 from config import ConfigManager
 from downloader import DownloadThread
@@ -24,6 +26,7 @@ class ISOAutomatorApp(QMainWindow):
             
     def init_ui(self):
         self.setWindowTitle("ISO Autoupdate")
+        self.setWindowIcon(QIcon("icon.png"))
         self.setMinimumSize(QSize(650, 450))
 
         main_widget = QWidget()
@@ -202,15 +205,20 @@ class ISOAutomatorApp(QMainWindow):
 
 
 if __name__ == "__main__":
+    # Tell Windows we are a distinct app (fixes taskbar icon)
+    myappid = 'manualonsosec.isoautoupdater.1.0'
+    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
     parser = argparse.ArgumentParser(description="ISO Autoupdate tool")
     parser.add_argument("--startup", action="store_true", help="Launch app automatically via system startup")
     args = parser.parse_args()
 
     app = QApplication(sys.argv)
+    app.setWindowIcon(QIcon("icon.png"))
     
     # Apply a modern dark theme using qt-material
     # Dark teal offers a very professional dark gray layout with teal accent colors
-    apply_stylesheet(app, theme='dark_teal.xml', invert_secondary=False)
+    apply_stylesheet(app, theme='dark_purple.xml', invert_secondary=False)
 
     # Initialize Main application Window
     auto_start = getattr(args, 'startup', False)
