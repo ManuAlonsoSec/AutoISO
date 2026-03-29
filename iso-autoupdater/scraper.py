@@ -163,6 +163,62 @@ def get_fedora_latest(allow_betas=False):
             
     return "0.0.0", ""
 
+def get_proxmox_latest(allow_betas=False):
+    """
+    Scrapes the Proxmox enterprise mirror for the latest VE ISO.
+    """
+    url = "https://enterprise.proxmox.com/iso/"
+    try:
+        soup = _get_soup(url)
+    except Exception:
+        return "0.0.0", ""
+    
+    versions = []
+    for link in soup.find_all('a'):
+        href = link.get('href')
+        # Typical format: proxmox-ve_8.4-1.iso
+        if href and re.match(r'proxmox-ve_[\w.-]+\.iso', href):
+            match = re.search(r'proxmox-ve_([A-Za-z0-9.-]+)\.iso', href)
+            if match:
+                version = match.group(1)
+                if not allow_betas and ('beta' in version.lower() or 'rc' in version.lower()):
+                    continue
+                versions.append((version, f"{url}{href}"))
+                
+    if versions:
+        # Sort by version number
+        def sort_key(item):
+            nums = [int(n) for n in re.findall(r'\d+', item[0])]
+            return nums
+        versions.sort(key=sort_key, reverse=True)
+        return versions[0][0], versions[0][1]
+        
+    return "0.0.0", ""
+
+def get_kali_latest(allow_betas=False):
+    """
+    Scrapes the Kali Linux cdimage repository for the latest installer ISO.
+    """
+    url = "https://cdimage.kali.org/current/"
+    try:
+        soup = _get_soup(url)
+    except Exception:
+        return "0.0.0", ""
+    
+    for link in soup.find_all('a'):
+        href = link.get('href')
+        # Typical format: kali-linux-2026.1-installer-amd64.iso
+        if href and re.match(r'kali-linux-[\w.-]+-installer-amd64\.iso', href):
+            match = re.search(r'kali-linux-([A-Za-z0-9.-]+)-installer-amd64\.iso', href)
+            if match:
+                version = match.group(1)
+                if not allow_betas and ('beta' in version.lower() or 'rc' in version.lower() or 'weekly' in version.lower()):
+                    continue
+                full_url = f"{url}{href}"
+                return version, full_url
+                
+    return "0.0.0", ""
+
 def get_latest_iso_info(distro_name, allow_betas=False):
     """
     Returns a tuple of (version, download_url) for the specified distro.
@@ -177,6 +233,10 @@ def get_latest_iso_info(distro_name, allow_betas=False):
             return get_arch_latest(allow_betas)
         if distro_name == "Fedora":
             return get_fedora_latest(allow_betas)
+        if distro_name == "Proxmox":
+            return get_proxmox_latest(allow_betas)
+        if distro_name == "Kali":
+            return get_kali_latest(allow_betas)
             
     except Exception as e:
         print(f"Error fetching {distro_name} ISO information: {e}")

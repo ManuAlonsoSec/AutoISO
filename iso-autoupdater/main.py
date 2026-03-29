@@ -75,6 +75,11 @@ class ISOAutomatorApp(QMainWindow):
         # Distro Grid Title
         main_layout.addWidget(QLabel("<b>Select distributions to keep updated:</b>"))
 
+        # Scroll area setup
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setFrameShape(QFrame.Shape.NoFrame)
+        
         # Distro Grid frame (uses QGridLayout for clean alignment)
         grid_frame = QFrame()
         self.grid_layout = QGridLayout(grid_frame)
@@ -111,7 +116,8 @@ class ISOAutomatorApp(QMainWindow):
             }
             row += 1
             
-        main_layout.addWidget(grid_frame)
+        scroll_area.setWidget(grid_frame)
+        main_layout.addWidget(scroll_area)
 
         # Push elements to the top
         main_layout.addStretch()

@@ -15,7 +15,9 @@ class ConfigManager:
                 "Ubuntu": True,
                 "Debian": True,
                 "Fedora": True,
-                "Arch": True
+                "Arch": True,
+                "Proxmox": False,
+                "Kali": False
             }
         }
         self.load_config()
