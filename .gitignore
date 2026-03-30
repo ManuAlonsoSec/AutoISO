@@ -1,3 +1,55 @@
-*/venv/
-*/__pycache__/
+# Python and environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env/
+
+# App-specific runtime/config files
+settings.json
 */settings.json
+
+# Downloaded Images (critical to not upload large GB ISOs)
+*.iso
+*.iso.part
+*.torrent
+
+# PyInstaller build artifacts
+build/
+dist/
+*.manifest
+# Do not ignore app.spec as it's needed for the CI/CD
+# *.spec
+
+# Packaging, Installers, and Distribution Formats
+installer/output/
+*.exe
+*.deb
+*.rpm
+*.dmg
+*.pkg
+*.app
+
+# OS-specific auto-generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor directories
+.vscode/
+.idea/
+*.swp
+*.suo
+*.user
+
+# Temporary files and logs
+*.log
+*.tmp
+*.temp
+/tmp/

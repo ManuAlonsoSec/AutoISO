@@ -26,7 +26,7 @@ class ISOAutomatorApp(QMainWindow):
             
     def init_ui(self):
         self.setWindowTitle("ISO Autoupdate")
-        self.setWindowIcon(QIcon("icon.png"))
+        self.setWindowIcon(QIcon("icon.ico"))
         self.setMinimumSize(QSize(650, 450))
 
         main_widget = QWidget()
@@ -220,7 +220,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     app = QApplication(sys.argv)
-    app.setWindowIcon(QIcon("icon.png"))
+    app.setWindowIcon(QIcon("icon.ico"))
     
     # Apply a modern dark theme using qt-material
     # Dark teal offers a very professional dark gray layout with teal accent colors

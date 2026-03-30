@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=ISO Autoupdater
+Exec=/usr/bin/isoautoupdater
+Icon=isoautoupdater
+Terminal=false
+Type=Application
+Categories=Utility;

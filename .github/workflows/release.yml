@@ -1,0 +1,100 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: pip install -r iso-autoupdater/requirements.txt pyinstaller
+      - name: Build with PyInstaller
+        run: cd iso-autoupdater && pyinstaller app.spec
+      - name: Create Windows Installer
+        run: |
+          # Use InnoSetup to compile setup.iss
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\windows\setup.iss
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: WindowsInstaller
+          path: installer/output/*.exe
+
+  build-linux:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg python3-pyqt6
+          pip install -r iso-autoupdater/requirements.txt pyinstaller
+      - name: Build with PyInstaller
+        run: cd iso-autoupdater && pyinstaller app.spec
+      - name: Build Deb Package
+        run: |
+          mkdir -p installer/linux/deb/usr/bin
+          cp iso-autoupdater/dist/ISOAutoupdater installer/linux/deb/usr/bin/isoautoupdater
+          chmod +x installer/linux/deb/usr/bin/isoautoupdater
+          dpkg-deb --build installer/linux/deb ISOAutoupdater-1.0.0-linux-amd64.deb
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LinuxDeb
+          path: ISOAutoupdater-1.0.0-linux-amd64.deb
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          brew install create-dmg
+          pip install -r iso-autoupdater/requirements.txt pyinstaller
+      - name: Build with PyInstaller
+        run: cd iso-autoupdater && pyinstaller app.spec
+      - name: Create DMG
+        run: |
+          create-dmg \
+            --volname "ISO Autoupdater" \
+            --window-pos 200 120 \
+            --window-size 600 300 \
+            --icon-size 100 \
+            --icon "ISOAutoupdater.app" 175 120 \
+            --hide-extension "ISOAutoupdater.app" \
+            --app-drop-link 425 120 \
+            "ISOAutoupdater-1.0.0-macos.dmg" \
+            "iso-autoupdater/dist/"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MacOSDmg
+          path: ISOAutoupdater-1.0.0-macos.dmg
+
+  release:
+    needs: [build-windows, build-linux, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            WindowsInstaller/*.exe
+            LinuxDeb/*.deb
+            MacOSDmg/*.dmg

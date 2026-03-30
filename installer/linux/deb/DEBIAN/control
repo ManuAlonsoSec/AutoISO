@@ -1,0 +1,8 @@
+Package: isoautoupdater
+Version: 1.0.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Maintainer: ManuAlonsoSec
+Description: Automated Linux ISO updater
+ Monitors and downloads the latest ISOs for your selected distributions.
