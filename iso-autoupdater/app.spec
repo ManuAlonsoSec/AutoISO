@@ -39,6 +39,6 @@ exe = EXE(
 app = BUNDLE(
     exe,
     name='ISOAutoupdater.app',
-    icon='icon.ico',     # Note: normally .icns, fallback to .ico if not converted
+    icon='icon.icns',     # Note: normally .icns, fallback to .ico if not converted
     bundle_identifier='com.manualonsosec.isoautoupdater',
 )
