@@ -7,7 +7,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[
-        ('icon.png', '.'),          # bundle the app icon
+        ('icon.ico', '.'),          # bundle the app icon
     ],
     hiddenimports=[
         'PyQt6.sip',
@@ -32,13 +32,13 @@ exe = EXE(
     strip=False,
     upx=True,
     console=False,        # no console window on Windows
-    icon='icon.png',
+    icon='icon.ico',
 )
 
 # macOS only — wraps into a .app bundle
 app = BUNDLE(
     exe,
     name='ISOAutoupdater.app',
-    icon='icon.png',     # Note: normally .icns, fallback to .png if not converted
+    icon='icon.ico',     # Note: normally .icns, fallback to .ico if not converted
     bundle_identifier='com.manualonsosec.isoautoupdater',
 )

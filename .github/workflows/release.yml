@@ -22,6 +22,8 @@ jobs:
           "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\windows\setup.iss
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           name: WindowsInstaller
           path: installer/output/*.exe
@@ -37,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y dpkg python3-pyqt6
+          sudo apt-get install -y dpkg
           pip install -r iso-autoupdater/requirements.txt pyinstaller
       - name: Build with PyInstaller
         run: cd iso-autoupdater && pyinstaller app.spec
@@ -49,6 +51,8 @@ jobs:
           dpkg-deb --build installer/linux/deb ISOAutoupdater-1.0.0-linux-amd64.deb
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           name: LinuxDeb
           path: ISOAutoupdater-1.0.0-linux-amd64.deb
@@ -81,6 +85,8 @@ jobs:
             "iso-autoupdater/dist/"
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
+        env:
+          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
         with:
           name: MacOSDmg
           path: ISOAutoupdater-1.0.0-macos.dmg
